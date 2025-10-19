@@ -12,7 +12,7 @@ import { GLTF } from "three-stdlib";
 import { useFrame } from "@react-three/fiber";
 import { Group, Vector3 } from "three";
 
-const path = "/flowers/scene.gltf";
+const path = import.meta.env.BASE_URL + "flowers/scene.gltf";
 
 type GLTFResult = GLTF & {
   nodes: {

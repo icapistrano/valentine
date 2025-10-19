@@ -12,7 +12,7 @@ import { useFrame } from "@react-three/fiber";
 import { FunctionComponent, useRef, useState } from "react";
 import { Outlines, useCursor, useGLTF } from "@react-three/drei";
 
-const path = "/shinyHeart/scene.gltf";
+const path = import.meta.env.BASE_URL + "/shinyHeart/scene.gltf";
 
 type GLTFResult = GLTF & {
   nodes: {
