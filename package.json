@@ -4,7 +4,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://icapistrano.github.io/valentine",
+  "homepage": "/projects/valentine/",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
