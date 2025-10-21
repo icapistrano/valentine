@@ -1,61 +1,50 @@
-name: Deploy Valentine Project to Portfolio
+name: Deploy Valentine to Portfolio
 
 on:
   push:
-    branches: [main] # triggers on push to main branch
+    branches: [main]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the valentine repo (source)
-      - name: Checkout valentine source
-        uses: actions/checkout@v4
+      # 1. Checkout Valentine repo
+      - uses: actions/checkout@v4
 
-      # 2. Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      # 2. Setup Node
+      - uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: 18
 
       # 3. Install dependencies
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
-      # 4. Build the project
-      - name: Build project
-        run: npm run build
+      # 4. Build Valentine
+      - run: npm run build
 
-      # 5. Checkout portfolio repo (portfolio-25)
-      - name: Checkout portfolio repo
-        uses: actions/checkout@v4
+      # 5. Checkout portfolio-25
+      - uses: actions/checkout@v4
         with:
-          repository: icapistrano/portfolio-25 # GitHub repo name of your portfolio
-          path: portfolio-25 # Local folder inside the runner
+          repository: icapistrano/portfolio-25
+          path: portfolio-25
           token: ${{ secrets.DEPLOY_TOKEN }}
 
-      # 6. Prepare destination directory
-      - name: Prepare projects/valentine folder
-        run: |
+      # 6. Copy build to projects/valentine
+      - run: |
           rm -rf portfolio-25/projects/valentine
           mkdir -p portfolio-25/projects/valentine
-
-      # 7. Copy build output
-      - name: Copy build to portfolio repo
-        run: |
           cp -r dist/* portfolio-25/projects/valentine/
 
-      # 8. Commit & push changes
-      - name: Commit & push
-        run: |
+      # 7. Commit & push
+      - run: |
           cd portfolio-25
           git config user.name "github-actions[bot]"
           git config user.email "actions@github.com"
           git add .
-          if git diff --cached --quiet; then
-            echo "No changes to deploy"
-          else
+          if ! git diff --cached --quiet; then
             git commit -m "Deploy Valentine: $GITHUB_SHA"
             git push origin HEAD:main
+          else
+            echo "No changes to deploy"
           fi
